@@ -99,7 +99,7 @@ const Player: React.FC<PlayerProps> = ({ audioName, subtitles }) => {
           <progress value={progress} max="100"></progress>
         </div>
       </div>
-      <audio ref={audioRef} src="your-audio-file.mp3"></audio>
+      <audio ref={audioRef} src="file:///home/bluven/Workspace/web/ab-player/a_beautiful_day.mp3"></audio>
     </div>
   )
 }
