@@ -1,7 +1,7 @@
 import Player from './components/Player'
 import { AudioPlayer } from './components/AudioPlayer'
 
-function App2(): JSX.Element {
+export function App2(): JSX.Element {
   return (
     <div style={{ height: '100vh', width: '100vw', display: 'flex' }}>
       <Player
@@ -14,10 +14,7 @@ function App2(): JSX.Element {
 
 function App() {
   return (
-    <div className="mx-auto max-w-[1200px]">
-      <h1 className="text-3xl font-bold mb-5">
-        Audio player in React
-      </h1>
+    <div className="flex h-screen w-screen m-0 p-0 overflow-hidden justify-center items-center">
       <AudioPlayer />
     </div>
   );
