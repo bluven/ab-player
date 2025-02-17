@@ -17,9 +17,9 @@ export interface Track {
 }
 
 interface AudioPlayerContextType {
-  currentTrack: Track;
-  // Adjust the type to allow null values
-  setCurrentTrack: Dispatch<SetStateAction<Track>>; 
+  currentTrack: Track | null;
+  setCurrentTrack: Dispatch<SetStateAction<Track|null>>; 
+  setCurrentTrackFromFilePath: (filePath: string) => void;
   timeProgress: number;
   setTimeProgress: Dispatch<SetStateAction<number>>;
   duration: number;
@@ -33,7 +33,7 @@ interface AudioPlayerContextType {
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
 
 export const AudioPlayerProvider = ({ children }: { children: ReactNode}) => {
-  const [currentTrack, setCurrentTrack] = useState<Track>({title: '', src: '', author: ''});
+  const [currentTrack, setCurrentTrack] = useState<Track|null>(null);
   const [timeProgress, setTimeProgress] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -41,9 +41,23 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode}) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressBarRef = useRef<HTMLInputElement>(null);
 
+  const setCurrentTrackFromFilePath = (filePath: string) => {
+    if (filePath) {
+      const title = filePath.split('/').pop();
+      const src = `file://${filePath}`;
+      setCurrentTrack({
+        title: title || '',
+        src,
+        author: '',
+      });
+      setIsPlaying(true);
+    }
+  };
+
   const contextValue = {
     currentTrack,
     setCurrentTrack,
+    setCurrentTrackFromFilePath,
     audioRef,
     progressBarRef,
     timeProgress,

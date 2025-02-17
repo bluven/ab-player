@@ -20,7 +20,6 @@ export const Controls = () => {
     duration,
     setTimeProgress,
     progressBarRef,
-    setCurrentTrack,
     isPlaying,
     setIsPlaying,
   } = useAudioPlayerContext();
@@ -145,7 +144,7 @@ export const Controls = () => {
   return (
     <div className="flex gap-4 items-center">
       <audio
-        src={currentTrack.src}
+        src={currentTrack?.src}
         ref={audioRef}
         onLoadedMetadata={onLoadedMetadata}
       />
