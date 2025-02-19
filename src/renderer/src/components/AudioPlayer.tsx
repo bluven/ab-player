@@ -5,16 +5,9 @@ import { Controls } from './Controls'
 import { ProgressBar } from './ProgressBar'
 import { VolumeControl } from './VolumeControl'
 import { Title } from './Title'
+import Subtitles from './Subtitles'
 import FileSelect from './FileSelect'
 import { useAudioPlayerContext } from '@renderer/context/audio-player-context'
-
-const Subtitles = () => {
-  return (
-    <div className="p-5 flex-grow border-t border-b border-gray-400 overflow-y-auto w-full h-full">
-      {/* Add subtitle content here */}
-    </div>
-  );
-};
 
 
 export const AudioPlayer = () => {

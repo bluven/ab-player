@@ -1,9 +1,10 @@
-import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
+import { app, shell, BrowserWindow, ipcMain} from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+
 import createMenu from './menu'
-import { selectAudioFile } from './utils'
+import { selectAudioFile, loadSubTitles } from './utils'
 
 function createWindow(): void {
   // Create the browser window.
@@ -55,10 +56,9 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
   ipcMain.on('ping', () => console.log('pong'))
-
   ipcMain.handle('select-audio-file', selectAudioFile);
+  ipcMain.on('load-subtitles', loadSubTitles);
 
   createWindow()
 
