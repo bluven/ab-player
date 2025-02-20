@@ -3,25 +3,13 @@ import { useAudioPlayerContext } from '../context/audio-player-context';
 export const ProgressBar = () => {
   const {
     progressBarRef,
-    audioRef,
     timeProgress,
     duration,
-    setTimeProgress,
+    updateProgress,
   } = useAudioPlayerContext();
 
   const handleProgressChange = () => {
-    if (audioRef.current && progressBarRef.current) {
-      const newTime = Number(progressBarRef.current.value);
-      audioRef.current.currentTime = newTime;
-
-      setTimeProgress(newTime);
-
-      // if progress bar changes while audio is on pause
-      progressBarRef.current.style.setProperty(
-        '--range-progress',
-        `${(newTime / duration) * 100}%`
-      );
-    }
+    updateProgress(Number(progressBarRef!.current!.value));
   };
 
   const formatTime = (time: number | undefined): string => {

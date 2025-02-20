@@ -18,35 +18,20 @@ export const Controls = () => {
     audioRef,
     setDuration,
     duration,
-    setTimeProgress,
     progressBarRef,
     isPlaying,
     setIsPlaying,
+    updateProgress,
   } = useAudioPlayerContext();
 
   const [isShuffle, setIsShuffle] = useState<boolean>(false);
   const [isRepeat, setIsRepeat] = useState<boolean>(false);
-  // const [isPlaying, setIsPlaying] = useState<boolean>(false);
-
   const playAnimationRef = useRef<number | null>(null);
-
-  const updateProgress = useCallback(() => {
-    if (audioRef.current && progressBarRef.current && duration) {
-      const currentTime = audioRef.current.currentTime;
-      setTimeProgress(currentTime);
-
-      progressBarRef.current.value = currentTime.toString();
-      progressBarRef.current.style.setProperty(
-        '--range-progress',
-        `${(currentTime / duration) * 100}%`
-      );
-    }
-  }, [duration, setTimeProgress, audioRef, progressBarRef]);
 
   const startAnimation = useCallback(() => {
     if (audioRef.current && progressBarRef.current && duration) {
       const animate = () => {
-        updateProgress();
+        updateProgress(audioRef!.current!.currentTime)
         playAnimationRef.current = requestAnimationFrame(animate);
       };
       playAnimationRef.current = requestAnimationFrame(animate);
@@ -63,7 +48,8 @@ export const Controls = () => {
         cancelAnimationFrame(playAnimationRef.current);
         playAnimationRef.current = null;
       }
-      updateProgress(); // Ensure progress is updated immediately when paused
+      // updateProgress(); // Ensure progress is updated immediately when paused
+      updateProgress(audioRef!.current!.currentTime)
     }
 
     return () => {
@@ -85,15 +71,14 @@ export const Controls = () => {
 
   const skipForward = () => {
     if (audioRef.current) {
-      audioRef.current.currentTime += 15;
-      updateProgress();
+      updateProgress(audioRef.current.currentTime + 15);
     }
   };
 
   const skipBackward = () => {
     if (audioRef.current) {
       audioRef.current.currentTime -= 15;
-      updateProgress();
+      updateProgress(audioRef.current.currentTime - 15);
     }
   };
 

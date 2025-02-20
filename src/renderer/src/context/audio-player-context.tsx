@@ -7,7 +7,8 @@ import {
   SetStateAction,
   RefObject,
   useRef,
-} from 'react'
+  useCallback
+} from 'react';
 
 export interface Track {
   title: string;
@@ -18,7 +19,7 @@ export interface Track {
 
 interface AudioPlayerContextType {
   currentTrack: Track | null;
-  setCurrentTrack: Dispatch<SetStateAction<Track|null>>; 
+  setCurrentTrack: Dispatch<SetStateAction<Track | null>>;
   setCurrentTrackFromFilePath: (filePath: string) => void;
   timeProgress: number;
   setTimeProgress: Dispatch<SetStateAction<number>>;
@@ -28,12 +29,13 @@ interface AudioPlayerContextType {
   progressBarRef: RefObject<HTMLInputElement>;
   isPlaying: boolean;
   setIsPlaying: Dispatch<SetStateAction<boolean>>;
+  updateProgress: (time: number) => void;
 }
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
 
-export const AudioPlayerProvider = ({ children }: { children: ReactNode}) => {
-  const [currentTrack, setCurrentTrack] = useState<Track|null>(null);
+export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
+  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [timeProgress, setTimeProgress] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -48,11 +50,26 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode}) => {
       setCurrentTrack({
         title: title || '',
         src,
-        author: '',
+        author: ''
       });
       setIsPlaying(true);
     }
   };
+
+  const updateProgress = useCallback((time: number) => {
+    if (audioRef.current && progressBarRef.current && duration) {
+      // Change current time only when they are different, otherwise it will cause infinite loop
+      if(audioRef.current.currentTime != time) {
+        audioRef.current.currentTime = time;
+      }
+      setTimeProgress(time);
+      progressBarRef.current.value = time.toString();
+      progressBarRef.current.style.setProperty(
+        '--range-progress',
+        `${(time / duration) * 100}%`
+      );
+    }
+  }, [duration, setTimeProgress, audioRef, progressBarRef]);
 
   const contextValue = {
     currentTrack,
@@ -66,6 +83,7 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode}) => {
     setDuration,
     isPlaying,
     setIsPlaying,
+    updateProgress
   };
 
   return (
@@ -85,4 +103,4 @@ export const useAudioPlayerContext = (): AudioPlayerContextType => {
   }
 
   return context;
-}
+};
