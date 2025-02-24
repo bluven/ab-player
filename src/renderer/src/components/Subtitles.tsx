@@ -1,56 +1,64 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { IpcRendererEvent } from 'electron';
 
 import { useAudioPlayerContext } from '@renderer/context/audio-player-context';
 
-// Define the Subtitle type
+// Define the Subtitle type with startTime and endTime
 type Subtitle = {
   number: number;
   timestamp: string;
   text: string;
-};
-
-// Function to parse the subtitle content
-const parseSubtitles = (content: string): Subtitle[] => {
-  const lines = content.split('\n\n');
-  return lines.map((line) => {
-    const [number, timestamp, ...textLines] = line.split('\n');
-    return {
-      number: parseInt(number, 10),
-      timestamp,
-      text: textLines.join('\n')
-    };
-  });
+  startTime: number;
+  endTime: number;
 };
 
 // Function to convert timestamp to seconds
 const timestampToSeconds = (timestamp: string): number => {
-  const parts = timestamp.split(' --> ')[0].split(':');
+  const parts = timestamp.split(':');
   const hours = parseInt(parts[0], 10);
   const minutes = parseInt(parts[1], 10);
   const seconds = parseFloat(parts[2].replace(',', '.'));
   return hours * 3600 + minutes * 60 + seconds;
 };
 
+// Function to parse the subtitle content
+const parseSubtitles = (content: string): Subtitle[] => {
+  const lines = content.split('\n\n').filter(line => line.trim()!== '');
+  return lines.map((line) => {
+    const [number, timestamp, ...textLines] = line.split('\n');
+    const [startTimestamp, endTimestamp] = timestamp.split(' --> ');
+
+    const startTime = timestampToSeconds(startTimestamp);
+    const endTime = timestampToSeconds(endTimestamp);
+    return {
+      number: parseInt(number, 10),
+      timestamp,
+      text: textLines.join('\n'),
+      startTime,
+      endTime
+    };
+  });
+};
+
 // Subtitle component to display a single subtitle
-const SubtitleComponent = ({ subtitle, handleClick }: { subtitle: Subtitle; handleClick: (time: number) => void }) => {
+const SubtitleComponent = ({ subtitle, handleClick, isActive }: { subtitle: Subtitle; handleClick: (time: number) => void; isActive: boolean }) => {
   const onClickHandler = () => {
-    const timeInSeconds = timestampToSeconds(subtitle.timestamp);
-    handleClick(timeInSeconds);
+    handleClick(subtitle.startTime);
   };
 
   return (
-    <div className="mb-4 cursor-pointer" onClick={onClickHandler}>
-      <p className="text-gray-600">{subtitle.timestamp}</p>
-      <p>{subtitle.text}</p>
+    <div className={`mb-4 cursor-pointer ${isActive ? 'bg-yellow-200' : ''}`} onClick={onClickHandler}>
+      <p><b>{subtitle.number}  </b>{subtitle.text}</p>
     </div>
   );
 };
 
 const Subtitles = () => {
-  const { currentTrack, updateProgress, isPlaying, setIsPlaying } = useAudioPlayerContext();
+  const { currentTrack, updateProgress, isPlaying, setIsPlaying, timeProgress } = useAudioPlayerContext();
   const [subtitles, setSubtitles] = useState<Subtitle[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const subtitlesRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   useEffect(() => {
     const handleSubtitlesLoaded = (event: IpcRendererEvent, { content, error }: { content?: string; error?: string }) => {
@@ -83,12 +91,46 @@ const Subtitles = () => {
     }
   };
 
+  useEffect(() => {
+    if (!subtitles ||!subtitlesRef.current) return;
+
+    if (activeIndex!== -1) {
+      const currentSubtitle = subtitles[activeIndex];
+      if (currentSubtitle.startTime <= timeProgress && currentSubtitle.endTime > timeProgress) {
+        return;
+      }
+    }
+
+    let newActiveIndex = -1;
+    for (let i = 0; i < subtitles.length; i++) {
+      if (subtitles[i].startTime <= timeProgress && subtitles[i].endTime > timeProgress) {
+        newActiveIndex = i;
+        break;
+      }
+    }
+
+    if (newActiveIndex === -1) return;
+
+    setActiveIndex(newActiveIndex);
+    const subtitleElements = subtitlesRef.current.children;
+    const activeSubtitle = subtitleElements[newActiveIndex] as HTMLElement;
+    if (activeSubtitle) {
+      activeSubtitle.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  }, [timeProgress, subtitles, activeIndex]);
+
   return (
-    <div className="p-5 flex-grow border-t border-b border-gray-400 overflow-y-auto w-full h-full">
+    <div ref={subtitlesRef} className="p-5 flex-grow border-t border-b border-gray-400 overflow-y-auto w-full h-full">
       {error && <p className="text-red-500">{error}</p>}
-      {subtitles && subtitles.map((subtitle) => (
-        <SubtitleComponent key={subtitle.number} subtitle={subtitle} handleClick={handleSubtitleClick} />
-      ))}
+      {subtitles && subtitles.map((subtitle) => {
+        const isActive = subtitle.startTime <= timeProgress && subtitle.endTime > timeProgress;
+        return (
+          <SubtitleComponent key={subtitle.number} subtitle={subtitle} handleClick={handleSubtitleClick} isActive={isActive} />
+        );
+      })}
     </div>
   );
 };
