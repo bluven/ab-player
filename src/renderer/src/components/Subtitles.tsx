@@ -61,7 +61,7 @@ const Subtitles = () => {
   const [activeIndex, setActiveIndex] = useState(-1);
 
   useEffect(() => {
-    const handleSubtitlesLoaded = (event: IpcRendererEvent, { content, error }: { content?: string; error?: string }) => {
+    const handleSubtitlesLoaded = (_event: IpcRendererEvent, { content, error }: { content?: string; error?: string }) => {
       if (content) {
         const parsedSubtitles = parseSubtitles(content);
         setSubtitles(parsedSubtitles);

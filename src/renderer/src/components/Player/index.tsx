@@ -78,6 +78,8 @@ const Player: React.FC<PlayerProps> = ({ audioName, subtitles }) => {
         audio.removeEventListener('loadedmetadata', () => {})
       }
     }
+
+    return () => {}
   }, [])
 
   return (

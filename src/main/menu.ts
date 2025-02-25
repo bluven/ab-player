@@ -1,4 +1,4 @@
-import { Menu, app, ipcMain, BrowserWindow } from 'electron';
+import { Menu, app, BrowserWindow } from 'electron';
 import { selectAudioFile } from './utils';
 
 // Create the menu template

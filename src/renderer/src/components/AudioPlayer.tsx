@@ -13,7 +13,7 @@ export const AudioPlayer = () => {
   const { currentTrack, setCurrentTrackFromFilePath, isPlaying, setIsPlaying } = useAudioPlayerContext();
 
   useEffect(() => {
-    const handleAudioFileSelected = (event, filePath) => {
+    const handleAudioFileSelected = (_event, filePath) => {
       setCurrentTrackFromFilePath(filePath);
     };
     window.electron.ipcRenderer.on('audio-file-selected', handleAudioFileSelected);
