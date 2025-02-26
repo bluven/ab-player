@@ -45,10 +45,10 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
 
   const setCurrentTrackFromFilePath = (filePath: string) => {
     if (filePath) {
-      const title = filePath.split('/').pop();
+      const title = filePath.split(/[/\\]/).pop() || '';
       const src = `file://${filePath}`;
       setCurrentTrack({
-        title: title || '',
+        title,
         src,
         author: ''
       });
