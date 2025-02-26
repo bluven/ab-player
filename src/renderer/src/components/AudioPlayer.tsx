@@ -31,12 +31,6 @@ export const AudioPlayer = () => {
           <Controls />
           <ProgressBar />
         </div>
-        <div className="flex items-center gap-2 text-gray-400">
-          <VolumeControl />
-          <button>
-            <RiMenuAddLine />
-          </button>
-        </div>
       </div>
     </div>
   );

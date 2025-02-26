@@ -11,6 +11,7 @@ import {
 } from 'react-icons/bs';
 
 import { useAudioPlayerContext } from '../context/audio-player-context';
+import { VolumeControl } from './VolumeControl';
 
 export const Controls = () => {
   const {
@@ -23,7 +24,6 @@ export const Controls = () => {
     setIsPlaying,
     updateProgress,
   } = useAudioPlayerContext();
-
   const [isShuffle, setIsShuffle] = useState<boolean>(false);
   const [isRepeat, setIsRepeat] = useState<boolean>(false);
   const playAnimationRef = useRef<number | null>(null);
@@ -190,6 +190,7 @@ export const Controls = () => {
           className={isRepeat ? 'text-[#f50]' : ''}
         />
       </button>
+      <VolumeControl />
     </div>
   );
 };
