@@ -93,14 +93,14 @@ const Subtitles = () => {
 
   useEffect(() => {
     if (!subtitles ||!subtitlesRef.current) return;
-
+  
     if (activeIndex!== -1) {
       const currentSubtitle = subtitles[activeIndex];
       if (currentSubtitle.startTime <= timeProgress && currentSubtitle.endTime > timeProgress) {
         return;
       }
     }
-
+  
     let newActiveIndex = -1;
     for (let i = 0; i < subtitles.length; i++) {
       if (subtitles[i].startTime <= timeProgress && subtitles[i].endTime > timeProgress) {
@@ -108,17 +108,28 @@ const Subtitles = () => {
         break;
       }
     }
-
+  
     if (newActiveIndex === -1) return;
-
+  
     setActiveIndex(newActiveIndex);
     const subtitleElements = subtitlesRef.current.children;
     const activeSubtitle = subtitleElements[newActiveIndex] as HTMLElement;
     if (activeSubtitle) {
-      activeSubtitle.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-      });
+      const container = subtitlesRef.current;
+      const containerRect = container.getBoundingClientRect();
+      const subtitleRect = activeSubtitle.getBoundingClientRect();
+  
+      // Check if the active subtitle is out of view
+      const isOutOfView =
+        subtitleRect.top < containerRect.top ||
+        subtitleRect.bottom > containerRect.bottom;
+  
+      if (isOutOfView) {
+        activeSubtitle.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
     }
   }, [timeProgress, subtitles, activeIndex]);
 
