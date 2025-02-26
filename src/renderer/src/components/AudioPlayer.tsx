@@ -10,7 +10,7 @@ import FileSelect from './FileSelect';
 import { useAudioPlayerContext } from '@renderer/context/audio-player-context';
 
 export const AudioPlayer = () => {
-  const { currentTrack, setCurrentTrackFromFilePath, isPlaying, setIsPlaying } = useAudioPlayerContext();
+  const { currentTrack, setCurrentTrackFromFilePath} = useAudioPlayerContext();
 
   useEffect(() => {
     const handleAudioFileSelected = (_event, filePath) => {
@@ -21,20 +21,6 @@ export const AudioPlayer = () => {
       window.electron.ipcRenderer.removeListener('audio-file-selected', handleAudioFileSelected);
     };
   }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.code === 'Space') {
-        event.preventDefault();
-        setIsPlaying(!isPlaying);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isPlaying, setIsPlaying]);
 
   return (
     <div className="flex flex-col w-full h-full m-0 p-0 overflow-hidden">

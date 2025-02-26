@@ -107,6 +107,32 @@ export const Controls = () => {
   // }, [isShuffle, setCurrentTrack, setTrackIndex]);
 
   useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      switch (event.code) {
+        case 'Space':
+          event.preventDefault();
+          setIsPlaying(!isPlaying);
+          break;
+        case 'ArrowRight':
+          event.preventDefault();
+          skipForward();
+          break;
+        case 'ArrowLeft':
+          event.preventDefault();
+          skipBackward();
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isPlaying, setIsPlaying]);
+
+  useEffect(() => {
     const currentAudioRef = audioRef.current;
 
     if (currentAudioRef) {
