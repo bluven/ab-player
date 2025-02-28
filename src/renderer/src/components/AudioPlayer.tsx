@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
-import { RiMenuAddLine } from 'react-icons/ri';
 
 import { Controls } from './Controls';
 import { ProgressBar } from './ProgressBar';
-import { VolumeControl } from './VolumeControl';
 import { Title } from './Title';
 import Subtitles from './Subtitles';
 import FileSelect from './FileSelect';

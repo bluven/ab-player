@@ -14,7 +14,7 @@ if (!gotTheLock) {
 }
 
 // Handle the case when a second instance is launched
-app.on('second-instance', (event, commandLine, workingDirectory) => {
+app.on('second-instance', (_event, _commandLine, _workingDirectory) => {
     const allWindows = BrowserWindow.getAllWindows();
     if (allWindows.length) {
         const mainWindow = allWindows[0];

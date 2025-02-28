@@ -1,4 +1,4 @@
-appId: com.electron.app
+appId: ab-player.bluven.me
 productName: ab-player
 directories:
   buildResources: build
@@ -18,6 +18,8 @@ nsis:
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
+  allowToChangeInstallationDirectory: true
+  oneClick: false
 mac:
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:
