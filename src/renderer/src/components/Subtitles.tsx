@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { IpcRendererEvent } from 'electron';
+import { RiFileCopyLine } from "react-icons/ri";
 
 import { useAudioPlayerContext } from '@renderer/context/audio-player-context';
 
@@ -46,9 +47,25 @@ const SubtitleComponent = ({ subtitle, handleClick, isActive }: { subtitle: Subt
     handleClick(subtitle.startTime);
   };
 
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(subtitle.text);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
   return (
-    <div className={`mb-4 cursor-pointer ${isActive ? 'bg-yellow-200' : ''}`} onClick={onClickHandler}>
-      <p><b>{subtitle.number}  </b>{subtitle.text}</p>
+    <div className={`mb-4 ${isActive ? 'bg-yellow-200' : ''} flex items-center`}>
+      <p className="mr-2 cursor-pointer" onClick={onClickHandler}>
+        <b>{subtitle.number}  </b>{subtitle.text}
+      </p>
+      <button
+        className="ml-2 bg-gray-200 cursor-pointer hover:bg-gray-300 active:bg-green-500 active:text-white transition-colors duration-300"
+        onClick={copyToClipboard}
+      >
+        <RiFileCopyLine />
+      </button>
     </div>
   );
 };
