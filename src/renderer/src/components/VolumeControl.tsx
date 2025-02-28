@@ -20,7 +20,7 @@ const VolumeInput = ({ volume, onVolumeChange }: { volume: number; onVolumeChang
         onChange={onVolumeChange}
         style={{
           background: `linear-gradient(to right, #f50 ${volume}%, #ccc ${volume}%)`,
-          width: '120px'
+          width: '100px'
         }}
       />
     </div>

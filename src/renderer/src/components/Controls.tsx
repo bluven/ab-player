@@ -12,6 +12,7 @@ import {
 
 import { useAudioPlayerContext } from '../context/audio-player-context';
 import { VolumeControl } from './VolumeControl';
+import { SpeedControl } from './SpeedControl';
 
 export const Controls = () => {
   const {
@@ -81,30 +82,6 @@ export const Controls = () => {
       updateProgress(audioRef.current.currentTime - 15);
     }
   };
-
-  // const handlePrevious = useCallback(() => {
-  //   setTrackIndex((prev) => {
-  //     const newIndex = isShuffle
-  //       ? Math.floor(Math.random() * tracks.length)
-  //       : prev === 0
-  //       ? tracks.length - 1
-  //       : prev - 1;
-  //     setCurrentTrack(tracks[newIndex]);
-  //     return newIndex;
-  //   });
-  // }, [isShuffle, setCurrentTrack, setTrackIndex]);
-
-  // const handleNext = useCallback(() => {
-  //   setTrackIndex((prev) => {
-  //     const newIndex = isShuffle
-  //       ? Math.floor(Math.random() * tracks.length)
-  //       : prev >= tracks.length - 1
-  //       ? 0
-  //       : prev + 1;
-  //     setCurrentTrack(tracks[newIndex]);
-  //     return newIndex;
-  //   });
-  // }, [isShuffle, setCurrentTrack, setTrackIndex]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -190,6 +167,7 @@ export const Controls = () => {
           className={isRepeat ? 'text-[#f50]' : ''}
         />
       </button>
+      <SpeedControl />
       <VolumeControl />
     </div>
   );
