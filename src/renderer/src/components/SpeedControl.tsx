@@ -6,7 +6,7 @@ const speedOptions = [0.5, 0.75, 1, 1.5, 2];
 
 export const SpeedControl = () => {
     const { audioRef } = useAudioPlayerContext();
-    const [isSpeedMenuOpen, setIsSpeedMenuOpen] = useState(true);
+    const [isSpeedMenuOpen, setIsSpeedMenuOpen] = useState(false);
 
     const handleSpeedChange = (speed: number) => {
         if (audioRef.current) {
