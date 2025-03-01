@@ -12,7 +12,24 @@ import {
 
 import { useAudioPlayerContext } from '../context/audio-player-context';
 import { VolumeControl } from './VolumeControl';
-import { SpeedControl } from './SpeedControl';
+// import { SpeedControl } from './SpeedControl';
+import { Dropdown, type DropdownItem } from './Dropdown';
+
+const speedOptions = [2, 1.5, 1, 0.75, 0.5];
+const SpeedControl = () => {
+  const { audioRef } = useAudioPlayerContext();
+  const handleSpeedChange = (item: DropdownItem) => {
+      if (audioRef.current) {
+          audioRef.current.playbackRate = item.value;
+      }
+  };
+
+  return <Dropdown 
+    buttonText='倍率' 
+    onSelect={handleSpeedChange} 
+    items={speedOptions.map(value => ({ value, label: `${value}X` }))}
+  />
+}
 
 export const Controls = () => {
   const {
