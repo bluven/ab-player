@@ -4,24 +4,25 @@ import {
   IoMdVolumeOff,
   IoMdVolumeLow,
 } from 'react-icons/io';
-import { useAudioPlayerContext } from '../context/audio-player-context';
+
+import { useAudioPlayerContext } from '../../context/audio-player-context';
+import './index.css';
 
 const VolumeInput = ({ volume, onVolumeChange }: { volume: number; onVolumeChange: (e: ChangeEvent<HTMLInputElement>) => void }) => {
+  const inputStyle = {
+    '--volume': `${volume}%`
+  } as React.CSSProperties;
+
   return (
-    <div 
-      className="absolute bottom-full left-1/2 -translate-x-1/2 h-36 flex items-center justify-center bg-black opacity-0 group-hover:opacity-100 group-hover:visible invisible rounded-md"
-    >
+    <div className="volume-input-container">
       <input
         type="range"
         min={0}
         max={100}
         value={volume}
-        className="volumn transform rotate-[-90deg]"
+        className="volume-input"
         onChange={onVolumeChange}
-        style={{
-          background: `linear-gradient(to right, #f50 ${volume}%, #ccc ${volume}%)`,
-          width: '100px'
-        }}
+        style={inputStyle}
       />
     </div>
   );
@@ -44,8 +45,8 @@ export const VolumeControl = () => {
   };
 
   return (
-    <div className="flex items-center gap-3 relative group">
-      <button onClick={() => setMuteVolume((prev) => !prev)}>
+    <div className="volume-control">
+      <button className="volume-button" onClick={() => setMuteVolume((prev) => !prev)}>
         {muteVolume || volume < 5 ? (
           <IoMdVolumeOff size={25} />
         ) : volume < 40 ? (

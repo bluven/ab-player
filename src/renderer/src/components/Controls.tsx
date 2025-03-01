@@ -12,7 +12,6 @@ import {
 
 import { useAudioPlayerContext } from '../context/audio-player-context';
 import { VolumeControl } from './VolumeControl';
-// import { SpeedControl } from './SpeedControl';
 import { Dropdown, type DropdownItem } from './Dropdown';
 
 const speedOptions = [2, 1.5, 1, 0.75, 0.5];

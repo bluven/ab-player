@@ -1,0 +1,49 @@
+.volume-control {
+  position: relative;
+  display: inline-block;
+}
+
+.volume-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.volume-input-container {
+  display: flex;
+  position: absolute;
+  height: 20px;
+  width: 150px;
+  bottom: calc(100% + 75px);
+  left: 10px;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  opacity: 0;
+  visibility: hidden;
+  border-radius: 4px;
+  transition: opacity 0.3s, visibility 0.3s;
+  transform: translateX(-50%) rotate(-90deg);
+  padding: 5px;
+}
+
+.volume-control:hover .volume-input-container {
+  opacity: 1;
+  visibility: visible;
+}
+
+.volume-input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 100%;
+}
+
+.volume-input::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, #f50 0%, #f50 var(--volume), #ccc var(--volume), #ccc 100%);
+}
+
+.volume-input::-moz-range-track {
+  background: linear-gradient(to right, #f50 0%, #f50 var(--volume), #ccc var(--volume), #ccc 100%);
+}
+
