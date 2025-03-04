@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { IpcRendererEvent } from 'electron';
 import { RiFileCopyLine } from "react-icons/ri";
 
@@ -71,7 +71,10 @@ const SubtitleComponent = ({ subtitle, handleClick, isActive }: { subtitle: Subt
 };
 
 const Subtitles = () => {
-  const { currentTrack, updateProgress, isPlaying, setIsPlaying, timeProgress } = useAudioPlayerContext();
+  const { 
+    currentTrack, updateProgress, 
+    isPlaying, setIsPlaying, 
+    isSingleRepeat, audioRef } = useAudioPlayerContext();
   const [subtitles, setSubtitles] = useState<Subtitle[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const subtitlesRef = useRef<HTMLDivElement>(null);
@@ -108,23 +111,42 @@ const Subtitles = () => {
     }
   };
 
-  useEffect(() => {
+  const handleSingleRepeat = () => {
+    if (!subtitles || !isPlaying || !isSingleRepeat || activeIndex === -1) {
+      return false;
+    }
+  
+    const currentSubtitle = subtitles[activeIndex];
+    if (audioRef.current && audioRef.current.currentTime >= currentSubtitle.endTime) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      
+      // try use useRef to store timeoutId
+      setTimeout(() => {
+        updateProgress(currentSubtitle.startTime);
+        audioRef!.current!.play();
+        setIsPlaying(true);
+      }, 500);
+
+      return true
+    }
+
+    return false
+  };
+  
+  const updateActiveSubtitle = () => {
     if (!subtitles ||!subtitlesRef.current) return;
   
-    if (activeIndex!== -1) {
+    if (activeIndex !== -1) {
       const currentSubtitle = subtitles[activeIndex];
-      if (currentSubtitle.startTime <= timeProgress && currentSubtitle.endTime > timeProgress) {
+      if (currentSubtitle.startTime <= audioRef.current!.currentTime && currentSubtitle.endTime > audioRef.current!.currentTime) {
         return;
       }
     }
   
-    let newActiveIndex = -1;
-    for (let i = 0; i < subtitles.length; i++) {
-      if (subtitles[i].startTime <= timeProgress && subtitles[i].endTime > timeProgress) {
-        newActiveIndex = i;
-        break;
-      }
-    }
+    const newActiveIndex = subtitles.findIndex((subtitle) => {
+      return subtitle.startTime <= audioRef.current!.currentTime && subtitle.endTime > audioRef.current!.currentTime;
+    });
   
     if (newActiveIndex === -1) return;
   
@@ -136,7 +158,6 @@ const Subtitles = () => {
       const containerRect = container.getBoundingClientRect();
       const subtitleRect = activeSubtitle.getBoundingClientRect();
   
-      // Check if the active subtitle is out of view
       const isOutOfView =
         subtitleRect.top < containerRect.top ||
         subtitleRect.bottom > containerRect.bottom;
@@ -148,13 +169,34 @@ const Subtitles = () => {
         });
       }
     }
-  }, [timeProgress, subtitles, activeIndex]);
+  };
+  
+  const handleAudioTimeUpdate = useCallback(() => {
+      const paused = handleSingleRepeat();
+      if (paused) {
+        return
+      }
+
+      updateActiveSubtitle();
+  }, [handleSingleRepeat, updateActiveSubtitle]);
+  
+  useEffect(() => {
+      const audioElement = audioRef.current;
+      if (audioElement) {
+          audioElement.addEventListener('timeupdate', handleAudioTimeUpdate);
+      }
+      return () => {
+          if (audioElement) {
+              audioElement.removeEventListener('timeupdate', handleAudioTimeUpdate);
+          }
+      };
+  }, [audioRef, handleAudioTimeUpdate]);
 
   return (
     <div ref={subtitlesRef} className="p-5 flex-grow border-t border-b border-gray-400 overflow-y-auto w-full h-full">
       {error && <p className="text-red-500">{error}</p>}
       {subtitles && subtitles.map((subtitle) => {
-        const isActive = subtitle.startTime <= timeProgress && subtitle.endTime > timeProgress;
+        const isActive = subtitle.startTime <= (audioRef.current?.currentTime || 0) && subtitle.endTime > (audioRef.current?.currentTime || 0);
         return (
           <SubtitleComponent key={subtitle.number} subtitle={subtitle} handleClick={handleSubtitleClick} isActive={isActive} />
         );

@@ -29,6 +29,8 @@ interface AudioPlayerContextType {
   progressBarRef: RefObject<HTMLInputElement>;
   isPlaying: boolean;
   setIsPlaying: Dispatch<SetStateAction<boolean>>;
+  isSingleRepeat: boolean;
+  setIsSingleRepeat: Dispatch<SetStateAction<boolean>>;
   updateProgress: (time: number) => void;
 }
 
@@ -39,6 +41,7 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
   const [timeProgress, setTimeProgress] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isSingleRepeat, setIsSingleRepeat] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressBarRef = useRef<HTMLInputElement>(null);
@@ -83,6 +86,8 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
     setDuration,
     isPlaying,
     setIsPlaying,
+    isSingleRepeat,
+    setIsSingleRepeat,
     updateProgress
   };
 

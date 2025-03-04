@@ -9,6 +9,7 @@ import {
   BsShuffle,
   BsRepeat,
 } from 'react-icons/bs';
+import { SlLoop } from 'react-icons/sl';
 
 import { useAudioPlayerContext } from '../context/audio-player-context';
 import { VolumeControl } from './VolumeControl';
@@ -39,6 +40,8 @@ export const Controls = () => {
     progressBarRef,
     isPlaying,
     setIsPlaying,
+    isSingleRepeat,
+    setIsSingleRepeat,
     updateProgress,
   } = useAudioPlayerContext();
   const [isShuffle, setIsShuffle] = useState<boolean>(false);
@@ -175,6 +178,12 @@ export const Controls = () => {
         <BsShuffle
           size={20}
           className={isShuffle ? 'text-[#f50]' : ''}
+        />
+      </button>
+      <button onClick={() => setIsSingleRepeat((prev) => !prev)}>
+        <SlLoop
+          size={20}
+          className={isSingleRepeat ? 'text-[#f50]' : ''}
         />
       </button>
       <button onClick={() => setIsRepeat((prev) => !prev)}>
