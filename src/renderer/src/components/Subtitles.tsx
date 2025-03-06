@@ -42,9 +42,9 @@ const parseSubtitles = (content: string): Subtitle[] => {
 };
 
 // Subtitle component to display a single subtitle
-const SubtitleComponent = ({ subtitle, handleClick, isActive }: { subtitle: Subtitle; handleClick: (time: number) => void; isActive: boolean }) => {
+const SubtitleComponent = ({ subtitle, handleClick, isActive }: { subtitle: Subtitle; handleClick: (subtitle: Subtitle) => void; isActive: boolean }) => {
   const onClickHandler = () => {
-    handleClick(subtitle.startTime);
+    handleClick(subtitle);
   };
 
   const copyToClipboard = async () => {
@@ -74,11 +74,12 @@ const Subtitles = () => {
   const { 
     currentTrack, updateProgress, 
     isPlaying, setIsPlaying, 
-    isSingleRepeat, audioRef } = useAudioPlayerContext();
+    timeProgress, isSingleRepeat
+  } = useAudioPlayerContext();
   const [subtitles, setSubtitles] = useState<Subtitle[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const subtitlesRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const subtitlesRef = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const handleSubtitlesLoaded = (_event: IpcRendererEvent, { content, error }: { content?: string; error?: string }) => {
@@ -104,48 +105,40 @@ const Subtitles = () => {
     };
   }, [currentTrack]);
 
-  const handleSubtitleClick = (time: number) => {
-    updateProgress(time);
-    if (!isPlaying) {
-      setIsPlaying(true);
-    }
-  };
+  const playSubtitle = useCallback((subtitle: Subtitle) => {
+    updateProgress(subtitle.startTime);
+    setIsPlaying(true);
+    setActiveIndex(subtitle.number)
+  }, [setIsPlaying, updateProgress]);
 
-  const handleSingleRepeat = () => {
+  useEffect(() => {
     if (!subtitles || !isPlaying || !isSingleRepeat || activeIndex === -1) {
-      return false;
+      return ;
     }
-  
+    
     const currentSubtitle = subtitles[activeIndex];
-    if (audioRef.current && audioRef.current.currentTime >= currentSubtitle.endTime) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-      
-      // try use useRef to store timeoutId
-      setTimeout(() => {
-        updateProgress(currentSubtitle.startTime);
-        audioRef!.current!.play();
-        setIsPlaying(true);
-      }, 500);
+    if (timeProgress >= currentSubtitle.endTime) {
+        setIsPlaying(false)
 
-      return true
+        setTimeout(() => {
+          updateProgress(currentSubtitle.startTime);
+          setIsPlaying(true)
+        }, 1000)
     }
-
-    return false
-  };
+  }, [subtitles, isSingleRepeat, timeProgress, isPlaying, activeIndex, updateProgress])
   
-  const updateActiveSubtitle = () => {
-    if (!subtitles ||!subtitlesRef.current) return;
+  useEffect(() => {
+    if (!subtitles ||!subtitlesRef.current || (isSingleRepeat && activeIndex !== -1)) return;
   
     if (activeIndex !== -1) {
       const currentSubtitle = subtitles[activeIndex];
-      if (currentSubtitle.startTime <= audioRef.current!.currentTime && currentSubtitle.endTime > audioRef.current!.currentTime) {
+      if (currentSubtitle.startTime <= timeProgress && currentSubtitle.endTime > timeProgress) {
         return;
       }
     }
   
     const newActiveIndex = subtitles.findIndex((subtitle) => {
-      return subtitle.startTime <= audioRef.current!.currentTime && subtitle.endTime > audioRef.current!.currentTime;
+      return subtitle.startTime <= timeProgress && subtitle.endTime > timeProgress
     });
   
     if (newActiveIndex === -1) return;
@@ -169,36 +162,19 @@ const Subtitles = () => {
         });
       }
     }
-  };
+  }, [subtitles, subtitlesRef, activeIndex, timeProgress, isSingleRepeat])
   
-  const handleAudioTimeUpdate = useCallback(() => {
-      const paused = handleSingleRepeat();
-      if (paused) {
-        return
-      }
-
-      updateActiveSubtitle();
-  }, [handleSingleRepeat, updateActiveSubtitle]);
-  
-  useEffect(() => {
-      const audioElement = audioRef.current;
-      if (audioElement) {
-          audioElement.addEventListener('timeupdate', handleAudioTimeUpdate);
-      }
-      return () => {
-          if (audioElement) {
-              audioElement.removeEventListener('timeupdate', handleAudioTimeUpdate);
-          }
-      };
-  }, [audioRef, handleAudioTimeUpdate]);
-
   return (
     <div ref={subtitlesRef} className="p-5 flex-grow border-t border-b border-gray-400 overflow-y-auto w-full h-full">
       {error && <p className="text-red-500">{error}</p>}
       {subtitles && subtitles.map((subtitle) => {
-        const isActive = subtitle.startTime <= (audioRef.current?.currentTime || 0) && subtitle.endTime > (audioRef.current?.currentTime || 0);
         return (
-          <SubtitleComponent key={subtitle.number} subtitle={subtitle} handleClick={handleSubtitleClick} isActive={isActive} />
+          <SubtitleComponent 
+            isActive={subtitle.number === activeIndex} 
+            key={subtitle.number} 
+            subtitle={subtitle} 
+            handleClick={playSubtitle} 
+          />
         );
       })}
     </div>
