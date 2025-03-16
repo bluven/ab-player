@@ -108,11 +108,12 @@ const Subtitles = () => {
   }, [currentTrack]);
 
   const playSubtitle = useCallback((subtitle: Subtitle) => {
-    updateProgress(subtitle.startTime);
-    setIsPlaying(true);
-    setActiveIndex(subtitle.number)
+    updateProgress(subtitle.startTime)
+    setIsPlaying(true)
+    setActiveIndex(subtitle.number-1)
   }, [setIsPlaying, updateProgress]);
 
+  // handle single repeat
   useEffect(() => {
     if (!subtitles || !isPlaying || !isSingleRepeat || activeIndex === -1) {
       return ;
@@ -129,6 +130,7 @@ const Subtitles = () => {
     }
   }, [subtitles, isSingleRepeat, timeProgress, isPlaying, activeIndex, updateProgress])
   
+  // handle auto scroll
   useEffect(() => {
     if (!subtitles ||!subtitlesRef.current || (isSingleRepeat && activeIndex !== -1)) return;
   
@@ -169,10 +171,10 @@ const Subtitles = () => {
   return (
     <div ref={subtitlesRef} className="p-5 flex-grow border-t border-b border-gray-400 overflow-y-auto w-full h-full">
       {error && <p className="text-red-500">{error}</p>}
-      {subtitles && subtitles.map((subtitle) => {
+      {subtitles && subtitles.map((subtitle, index) => {
         return (
           <SubtitleComponent 
-            isActive={subtitle.number === activeIndex} 
+            isActive={index === activeIndex} 
             key={subtitle.number} 
             subtitle={subtitle} 
             handleClick={playSubtitle} 
