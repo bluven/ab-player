@@ -24,7 +24,9 @@ const timestampToSeconds = (timestamp: string): number => {
 
 // Function to parse the subtitle content
 const parseSubtitles = (content: string): Subtitle[] => {
-  const lines = content.split('\n\n').filter(line => line.trim()!== '');
+  const lines = content.replace(/\r\n|\r/g, '\n')
+                  .split('\n\n')
+                  .filter(line => line.trim()!== '');
   return lines.map((line) => {
     const [number, timestamp, ...textLines] = line.split('\n');
     const [startTimestamp, endTimestamp] = timestamp.split(' --> ');
