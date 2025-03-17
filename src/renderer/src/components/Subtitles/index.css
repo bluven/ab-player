@@ -1,0 +1,55 @@
+.subtitle-item {
+  font-family: "Gill Sans", sans-serif;
+  height: 2rem;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.active-subtitle {
+  height: 3rem;
+  font-size: 1.3rem;
+  font-weight: 400;
+  background-color: #109959;
+}
+
+.subtitle-number {
+  min-width: 2.5rem;
+}
+
+.subtitle-text {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+.copy-button {
+  margin-left: 0.5rem;
+  background-color: #e5e7eb;
+  cursor: pointer;
+}
+
+.copy-button:hover {
+  background-color: #d1d5db;
+}
+
+.copy-button:active {
+  background-color: #22c55e;
+  color: white;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.subtitles-container {
+  background-color: #b2ebd5;
+  padding: 0.25rem;
+  flex-grow: 1;
+  border-top: 1px solid #9ca3af;
+  border-bottom: 1px solid #9ca3af;
+  overflow-y: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.error-text {
+  color: #ef4444;
+}

@@ -5,7 +5,7 @@ export const Title = () => {
 
   return (
     <div className="flex items-center justify-center">
-      <p className="font-bold lg:truncate lg:max-w-64">
+      <p className="font-bold">
         { currentTrack === null ? '' : currentTrack.title}
       </p>
     </div>

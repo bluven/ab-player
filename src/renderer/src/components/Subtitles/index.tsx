@@ -3,6 +3,7 @@ import { IpcRendererEvent } from 'electron';
 import { RiFileCopyLine } from "react-icons/ri";
 
 import { useAudioPlayerContext } from '@renderer/context/audio-player-context';
+import './index.css';
 
 // Define the Subtitle type with startTime and endTime
 type Subtitle = {
@@ -58,12 +59,13 @@ const SubtitleComponent = ({ subtitle, handleClick, isActive }: { subtitle: Subt
   };
 
   return (
-    <div className={`mb-4 ${isActive ? 'bg-yellow-200' : ''} flex items-center`}>
-      <p className="mr-2 cursor-pointer" onClick={onClickHandler}>
-        <b>{subtitle.number}  </b>{subtitle.text}
+    <div className={`subtitle-item ${isActive ? 'active-subtitle' : ''}`}>
+      <span className='subtitle-number'>{subtitle.number}</span>
+      <p className="subtitle-text" onClick={onClickHandler}>
+        {subtitle.text}
       </p>
       <button
-        className="ml-2 bg-gray-200 cursor-pointer hover:bg-gray-300 active:bg-green-500 active:text-white transition-colors duration-300"
+        className="copy-button"
         onClick={copyToClipboard}
       >
         <RiFileCopyLine />
@@ -169,8 +171,8 @@ const Subtitles = () => {
   }, [subtitles, subtitlesRef, activeIndex, timeProgress, isSingleRepeat])
   
   return (
-    <div ref={subtitlesRef} className="p-5 flex-grow border-t border-b border-gray-400 overflow-y-auto w-full h-full">
-      {error && <p className="text-red-500">{error}</p>}
+    <div ref={subtitlesRef} className="subtitles-container">
+      {error && <p className="error-text">{error}</p>}
       {subtitles && subtitles.map((subtitle, index) => {
         return (
           <SubtitleComponent 
