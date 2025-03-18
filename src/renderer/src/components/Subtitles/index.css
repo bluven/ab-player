@@ -1,16 +1,23 @@
 .subtitle-item {
   font-family: "Gill Sans", sans-serif;
-  height: 2rem;
   font-size: 1.2rem;
   display: flex;
   align-items: center;
+  padding: 0.2rem 0; 
 }
 
 .active-subtitle {
-  height: 3rem;
   font-size: 1.3rem;
   font-weight: 400;
-  background-color: #109959;
+  background-color: #8fdbb8;
+}
+
+.subtitle-text {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  word-wrap: break-word; 
+  white-space: normal; 
 }
 
 .subtitle-number {
@@ -40,7 +47,7 @@
 }
 
 .subtitles-container {
-  background-color: #b2ebd5;
+  background-color: white;
   padding: 0.25rem;
   flex-grow: 1;
   border-top: 1px solid #9ca3af;
