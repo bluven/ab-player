@@ -65,7 +65,7 @@ const SubtitleComponent = ({ subtitle, handleClick, isActive }: { subtitle: Subt
         {subtitle.text}
       </p>
       <button
-        className="copy-button"
+        className="copy-button hidden-copy-button"
         onClick={copyToClipboard}
       >
         <RiFileCopyLine />
