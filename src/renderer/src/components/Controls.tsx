@@ -4,9 +4,6 @@ import {
   BsFillPauseFill,
   BsFillPlayFill,
   BsFillRewindFill,
-  BsSkipEndFill,
-  BsSkipStartFill,
-  BsShuffle,
   BsRepeat,
 } from 'react-icons/bs';
 import { SlLoop } from 'react-icons/sl';
@@ -44,7 +41,6 @@ export const Controls = () => {
     setIsSingleRepeat,
     updateProgress,
   } = useAudioPlayerContext();
-  const [isShuffle, setIsShuffle] = useState<boolean>(false);
   const [isRepeat, setIsRepeat] = useState<boolean>(false);
   const playAnimationRef = useRef<number | null>(null);
 
@@ -134,9 +130,10 @@ export const Controls = () => {
     if (currentAudioRef) {
       currentAudioRef.onended = () => {
         if (isRepeat) {
+          currentAudioRef.currentTime = 0;
           currentAudioRef.play();
         } else {
-          // handleNext(); // This function should handle both shuffle and non-shuffle scenarios
+          setIsPlaying(false);
         }
       };
     }
@@ -155,9 +152,6 @@ export const Controls = () => {
         ref={audioRef}
         onLoadedMetadata={onLoadedMetadata}
       />
-      <button>
-        <BsSkipStartFill size={20} />
-      </button>
       <button onClick={skipBackward}>
         <BsFillRewindFill size={20} />
       </button>
@@ -170,15 +164,6 @@ export const Controls = () => {
       </button>
       <button onClick={skipForward}>
         <BsFillFastForwardFill size={20} />
-      </button>
-      <button>
-        <BsSkipEndFill size={20} />
-      </button>
-      <button onClick={() => setIsShuffle((prev) => !prev)}>
-        <BsShuffle
-          size={20}
-          className={isShuffle ? 'text-[#f50]' : ''}
-        />
       </button>
       <button onClick={() => setIsSingleRepeat((prev) => !prev)}>
         <SlLoop
