@@ -28,6 +28,34 @@ const SpeedControl = () => {
   />
 }
 
+function formatTime(time: number | undefined): string {
+    if (typeof time === 'number' && !isNaN(time)) {
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60);
+
+      // Convert to string and pad with leading zeros if necessary
+      const formatMinutes = minutes.toString().padStart(2, '0');
+      const formatSeconds = seconds.toString().padStart(2, '0');
+
+      return `${formatMinutes}:${formatSeconds}`;
+    }
+    return '00:00';
+  };
+
+
+function ProgressAndDuration() {
+  const {
+    timeProgress,
+    duration,
+  } = useAudioPlayerContext();
+  
+  return (
+    <span>
+      <span>{formatTime(timeProgress)}</span> / <span>{formatTime(duration)}</span>
+    </span>
+  )
+}
+
 export const Controls = () => {
   const {
     currentTrack,
@@ -64,7 +92,6 @@ export const Controls = () => {
         cancelAnimationFrame(playAnimationRef.current);
         playAnimationRef.current = null;
       }
-      // updateProgress(); // Ensure progress is updated immediately when paused
       updateProgress(audioRef!.current!.currentTime)
     }
 
@@ -146,39 +173,46 @@ export const Controls = () => {
   }, [isRepeat, audioRef]);
 
   return (
-    <div className="flex gap-4 items-center">
-      <audio
-        src={currentTrack?.src}
-        ref={audioRef}
-        onLoadedMetadata={onLoadedMetadata}
-      />
-      <button onClick={skipBackward}>
-        <BsFillRewindFill size={20} />
-      </button>
-      <button onClick={() => setIsPlaying((prev) => !prev)}>
-        {isPlaying ? (
-          <BsFillPauseFill size={30} />
-        ) : (
-          <BsFillPlayFill size={30} />
-        )}
-      </button>
-      <button onClick={skipForward}>
-        <BsFillFastForwardFill size={20} />
-      </button>
-      <button onClick={() => setIsSingleRepeat((prev) => !prev)}>
-        <SlLoop
-          size={20}
-          className={isSingleRepeat ? 'text-[#f50]' : ''}
+    <div className="flex w-full justify-between items-center px-4">
+      <div className="flex items-center">
+        <ProgressAndDuration />
+      </div>
+      <div className="flex items-center space-x-6"> 
+        <audio
+          src={currentTrack?.src}
+          ref={audioRef}
+          onLoadedMetadata={onLoadedMetadata}
         />
-      </button>
-      <button onClick={() => setIsRepeat((prev) => !prev)}>
-        <BsRepeat
-          size={20}
-          className={isRepeat ? 'text-[#f50]' : ''}
-        />
-      </button>
-      <SpeedControl />
-      <VolumeControl />
+        <button onClick={skipBackward}>
+          <BsFillRewindFill size={20} />
+        </button>
+        <button onClick={() => setIsPlaying((prev) => !prev)}>
+          {isPlaying ? (
+            <BsFillPauseFill size={30} />
+          ) : (
+            <BsFillPlayFill size={30} />
+          )}
+        </button>
+        <button onClick={skipForward}>
+          <BsFillFastForwardFill size={20} />
+        </button>
+        <VolumeControl />
+      </div>
+      <div className="flex items-center space-x-6"> 
+        <button onClick={() => setIsSingleRepeat((prev) => !prev)}>
+          <SlLoop
+            size={20}
+            className={isSingleRepeat ? 'text-[#f50]' : ''}
+          />
+        </button>
+        <button onClick={() => setIsRepeat((prev) => !prev)}>
+          <BsRepeat
+            size={20}
+            className={isRepeat ? 'text-[#f50]' : ''}
+          />
+        </button>
+        <SpeedControl />
+      </div>
     </div>
   );
 };

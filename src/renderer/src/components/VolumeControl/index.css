@@ -1,6 +1,7 @@
 .volume-control {
   position: relative;
   display: inline-block;
+  padding-top: 5px;
 }
 
 .volume-button {
