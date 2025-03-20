@@ -8,9 +8,10 @@ import {
 } from 'react-icons/bs';
 import { SlLoop } from 'react-icons/sl';
 
-import { useAudioPlayerContext } from '../context/audio-player-context';
+import { useAudioPlayerContext } from '@renderer/context/audio-player-context';
+import { Dropdown, type DropdownItem } from '@renderer/components/Dropdown';
 import { VolumeControl } from './VolumeControl';
-import { Dropdown, type DropdownItem } from './Dropdown';
+import './index.css';
 
 const speedOptions = [2, 1.5, 1, 0.75, 0.5];
 const SpeedControl = () => {
@@ -48,7 +49,7 @@ function ProgressAndDuration() {
     timeProgress,
     duration,
   } = useAudioPlayerContext();
-  
+
   return (
     <span>
       <span>{formatTime(timeProgress)}</span> / <span>{formatTime(duration)}</span>
@@ -173,11 +174,11 @@ export const Controls = () => {
   }, [isRepeat, audioRef]);
 
   return (
-    <div className="flex w-full justify-between items-center px-4">
-      <div className="flex items-center">
+    <div className="controls-container">
+      <div className="left-group">
         <ProgressAndDuration />
       </div>
-      <div className="flex items-center space-x-6"> 
+      <div className="center-group">
         <audio
           src={currentTrack?.src}
           ref={audioRef}
@@ -198,7 +199,7 @@ export const Controls = () => {
         </button>
         <VolumeControl />
       </div>
-      <div className="flex items-center space-x-6"> 
+      <div className="right-group">
         <button onClick={() => setIsSingleRepeat((prev) => !prev)}>
           <SlLoop
             size={20}
@@ -216,3 +217,5 @@ export const Controls = () => {
     </div>
   );
 };
+
+export default Controls;

@@ -6,6 +6,7 @@ import { Title } from './Title';
 import Subtitles from './Subtitles';
 import FileSelect from './FileSelect';
 import { useAudioPlayerContext } from '@renderer/context/audio-player-context';
+import './AudioPlayer.css'; 
 
 export const AudioPlayer = () => {
   const { currentTrack, setCurrentTrackFromFilePath} = useAudioPlayerContext();
@@ -21,14 +22,12 @@ export const AudioPlayer = () => {
   }, []);
 
   return (
-    <div className="flex flex-col w-full h-full m-0 p-0 overflow-hidden">
+    <div className="audio-player">
       <Title />
       {currentTrack == null ? <FileSelect /> : <Subtitles />}
-      <div className="min-h-8 bg-[#2e2d2d] flex flex-col gap-9 lg:flex-row justify-between items-center text-white p-[0.5rem_10px] m-0">
-        <div className="w-full flex flex-col items-center gap-1 m-auto flex-1">
-          <ProgressBar />
-          <Controls />
-        </div>
+      <div className="audio-player-bottom ">
+        <ProgressBar />
+        <Controls />
       </div>
     </div>
   );

@@ -1,0 +1,46 @@
+.progress-bar-container {
+  display: flex;
+  width: 100%;
+  height: 10px;
+}
+
+.progress-bar-input {
+  width: 100%;
+  height: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.progress-bar-input::-webkit-slider-runnable-track {
+  position: relative;
+  height: 5px !important;
+  background: linear-gradient(to right,#0079ca var(--range-progress), #ccc 0%);
+}
+
+.progress-bar-container .progress-bar-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none; 
+  background: #0079ca;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 15px !important;
+  height: 15px !important;
+  margin-top: -5px;
+}
+
+.progress-bar-input::-moz-range-track {
+  position: relative;
+  background: linear-gradient(to right,#0079ca var(--range-progress), #ccc 0%);
+}
+
+.progress-bar-input::-moz-range-thumb {
+  appearance: none; 
+  background: #0079ca;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 15px !important;
+  height: 15px !important;
+  margin-top: -5px;
+}

@@ -5,8 +5,8 @@ import {
   IoMdVolumeLow,
 } from 'react-icons/io';
 
-import { useAudioPlayerContext } from '../../context/audio-player-context';
-import './index.css';
+import { useAudioPlayerContext } from '@renderer/context/audio-player-context';
+import './VolumeControl.css';
 
 const VolumeInput = ({ volume, onVolumeChange }: { volume: number; onVolumeChange: (e: ChangeEvent<HTMLInputElement>) => void }) => {
   const inputStyle = {
@@ -59,3 +59,5 @@ export const VolumeControl = () => {
     </div>
   );
 };
+
+export default VolumeControl;

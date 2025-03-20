@@ -1,4 +1,5 @@
 import { useAudioPlayerContext } from '../context/audio-player-context';
+import './ProgressBar.css';
 
 export const ProgressBar = () => {
   const {
@@ -11,9 +12,9 @@ export const ProgressBar = () => {
   };
 
   return (
-    <div className="flex items-center justify-center gap-5 w-full">
+    <div className="progress-bar-container">
       <input
-        className="max-w-[100%] bg-gray-300"
+        className="progress-bar-input"
         ref={progressBarRef}
         type="range"
         defaultValue="0"

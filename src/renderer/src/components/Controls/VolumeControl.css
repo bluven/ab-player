@@ -13,7 +13,7 @@
 .volume-input-container {
   display: flex;
   position: absolute;
-  height: 20px;
+  height: 30px;
   width: 150px;
   bottom: calc(100% + 75px);
   left: 10px;
@@ -25,7 +25,7 @@
   border-radius: 4px;
   transition: opacity 0.3s, visibility 0.3s;
   transform: translateX(-50%) rotate(-90deg);
-  padding: 5px;
+  padding: 10px;
 }
 
 .volume-control:hover .volume-input-container {
@@ -41,10 +41,10 @@
 }
 
 .volume-input::-webkit-slider-runnable-track {
-  background: linear-gradient(to right, #f50 0%, #f50 var(--volume), #ccc var(--volume), #ccc 100%);
+  background: linear-gradient(to right, #0079ca 0%, #0079ca var(--volume), #ccc var(--volume), #ccc 100%);
 }
 
 .volume-input::-moz-range-track {
-  background: linear-gradient(to right, #f50 0%, #f50 var(--volume), #ccc var(--volume), #ccc 100%);
+  background: linear-gradient(to right, #0079ca 0%, #0079ca var(--volume), #ccc var(--volume), #ccc 100%);
 }
 

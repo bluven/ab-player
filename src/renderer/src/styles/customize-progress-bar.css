@@ -29,7 +29,7 @@ input[type='range']::-moz-range-track {
 input[type='range']::before {
     content: '';
     height: 2px;
-    background: #f50;
+    background: #0079ca;
     width: var(--range-progress);
     border-bottom-left-radius: 2px;
     border-top-left-radius: 2px;
@@ -40,7 +40,7 @@ input[type='range']::before {
 
 /* played progress length - firefox */
 input[type='range']::-moz-range-progress {
-    background: #f50;
+    background: #0079ca;
     border-bottom-left-radius: 2px;
     border-top-left-radius: 2px;
     height: 2px;
@@ -58,13 +58,13 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 .volumn::-webkit-slider-thumb {
-    background-color: #f50;
+    background-color: #0079ca;
 }
 
 /* dragging thumb - chrome and safari */
 input[type='range']:active::-webkit-slider-thumb {
     transform: scale(1.2);
-    background-color: #f50;
+    background-color: #0079ca;
 }
 
 /* slider thumb - firefox */
@@ -72,7 +72,7 @@ input[type='range']::-moz-range-thumb {
     height: 8px;
     width: 8px;
     border-radius: 50%;
-    background: #f50;
+    background: #0079ca;
     cursor: pointer;
     border: transparent;
     position: relative;
@@ -81,5 +81,5 @@ input[type='range']::-moz-range-thumb {
 /* dragging thumb - firefox */
 input[type='range']:active::-moz-range-thumb {
   transform: scale(1.2);
-  background-color: #f50;
+  background-color: #0079ca;
 }

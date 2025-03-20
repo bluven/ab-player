@@ -1,0 +1,25 @@
+.controls-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.left-group {
+    display: flex;
+    align-items: center;
+}
+
+.center-group {
+    display: flex;
+    align-items: center;
+    column-gap: 1.5rem;
+}
+
+.right-group {
+    display: flex;
+    align-items: center;
+    column-gap: 1.5rem;
+}
